@@ -1,6 +1,6 @@
 # ⛔ ЗАКРЫТЫЙ ПРОЕКТ · ЛИЦЕНЗИЯ ALL RIGHTS RESERVED
 
-Сацт: https://sashamaencraft.github.io/Wi-Fi-/
+Сайт: https://sashamaencraft.github.io/Wi-Fi-/
 
 **Этот репозиторий создан ТОЛЬКО для демонстрации. Копирование запрещено.**
 
