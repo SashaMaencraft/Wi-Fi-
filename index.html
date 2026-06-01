@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>㊙ ⸸קąﾓﾓ๏รッ ⸸👑 • Защищённый доступ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 50%, #0a0f1e, #03050b);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .shield-card {
+            background: rgba(18, 22, 40, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .shield-header {
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .shield-icon { filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4)); }
+        .shield-title { font-weight: 700; background: linear-gradient(135deg, #ffffff, #c0c8e8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .shield-sub { color: #9ea3c7; font-weight: 500; }
+
+        .status-block {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .status-row:last-child { border-bottom: none; }
+        .status-label { font-weight: 600; color: #b9c0e0; }
+        .status-value { font-family: monospace; font-weight: 500; text-align: right; color: #e0e4ff; word-break: break-all; }
+
+        .access-granted { background: linear-gradient(135deg, #2ee6a0, #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .access-denied { background: linear-gradient(135deg, #ff7b8a, #ffb347); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+        .password-card {
+            background: linear-gradient(145deg, #0f1225, #080b1a);
+            border: 1px solid rgba(46, 230, 160, 0.25);
+        }
+        .password-label { text-transform: uppercase; letter-spacing: 2px; color: #2ee6a0; font-weight: 700; }
+        .password-value {
+            background: #01010a;
+            font-family: monospace;
+            font-weight: 700;
+            text-align: center;
+            color: #ffdf7e;
+            cursor: pointer;
+            border: 1px solid rgba(255, 223, 126, 0.3);
+            transition: all 0.2s;
+        }
+        .password-value:hover { background: #1a1d35; }
+
+        .error-card {
+            background: rgba(255, 92, 110, 0.12);
+            border: 1px solid rgba(255, 92, 110, 0.4);
+            color: #ffb3ba;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .button-group { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-primary { background: linear-gradient(95deg, #2ee6a0, #1aaf7a); color: #0a0f1e; font-weight: 700; }
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-danger { background: rgba(255, 92, 110, 0.2); color: #ffb0b7; border: 1px solid rgba(255, 92, 110, 0.4); }
+        .btn-disabled { background: #2a2f4e; color: #6e749b; cursor: not-allowed; opacity: 0.6; }
+        .btn-instruction {
+            background: rgba(46, 230, 160, 0.12);
+            border: 1px solid rgba(46, 230, 160, 0.4);
+            color: #b5f0da;
+        }
+        .btn-instruction:hover { background: rgba(46, 230, 160, 0.25); }
+
+        .shield-footer {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #c0c5e0;
+            font-weight: 500;
+        }
+
+        @media (min-width: 769px) {
+            body { padding: 24px; }
+            .shield-card { max-width: 520px; width: 100%; border-radius: 56px; }
+            .shield-header { padding: 32px 32px 16px 32px; }
+            .shield-icon { font-size: 72px; margin-bottom: 12px; }
+            .shield-title { font-size: 28px; letter-spacing: -0.3px; }
+            .shield-sub { font-size: 13px; margin-top: 6px; }
+            .status-block { margin: 24px 24px 0 24px; padding: 20px; border-radius: 32px; }
+            .status-row { padding: 12px 0; }
+            .status-label { font-size: 14px; }
+            .status-value { font-size: 15px; max-width: 65%; }
+            .shield-content { padding: 24px; }
+            .password-card { border-radius: 28px; padding: 20px; margin-bottom: 24px; }
+            .password-label { font-size: 12px; margin-bottom: 12px; }
+            .password-value { padding: 16px 20px; border-radius: 40px; font-size: 22px; letter-spacing: 2px; }
+            .error-card { border-radius: 28px; padding: 20px; margin-bottom: 24px; font-size: 15px; }
+            .btn { padding: 14px 20px; border-radius: 44px; font-size: 15px; }
+            .shield-footer { padding: 16px 24px 24px; font-size: 11px; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .shield-card { max-width: 100%; width: 100%; border-radius: 32px; }
+            .shield-header { padding: 24px 20px 12px 20px; }
+            .shield-icon { font-size: 56px; margin-bottom: 8px; }
+            .shield-title { font-size: 24px; }
+            .shield-sub { font-size: 11px; margin-top: 4px; }
+            .status-block { margin: 16px 16px 0 16px; padding: 16px; border-radius: 24px; }
+            .status-row { padding: 10px 0; }
+            .status-label { font-size: 13px; }
+            .status-value { font-size: 13px; max-width: 60%; }
+            .shield-content { padding: 16px; }
+            .password-card { border-radius: 24px; padding: 16px; margin-bottom: 16px; }
+            .password-label { font-size: 10px; margin-bottom: 10px; }
+            .password-value { padding: 14px 16px; border-radius: 36px; font-size: 18px; letter-spacing: 1px; word-break: break-all; }
+            .error-card { border-radius: 24px; padding: 16px; margin-bottom: 16px; font-size: 14px; }
+            .btn { padding: 12px 14px; border-radius: 40px; font-size: 14px; }
+            .shield-footer { padding: 12px 16px 20px; font-size: 10px; color: #b0b5d5; }
+        }
+
+        .custom-modal, .custom-confirm, .custom-info {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #1a1f3a, #12162c);
+            border-radius: 48px;
+            padding: 32px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-icon { font-size: 56px; margin-bottom: 16px; }
+        .modal-title { font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
+        .modal-desc { font-size: 14px; color: #9ea3c7; margin-bottom: 20px; line-height: 1.4; }
+        .modal-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 18px;
+            background: #0a0e1c;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            color: #ffffff;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 1px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        .modal-input:focus { border-color: #2ee6a0; }
+        
+        .checkbox-group {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #2ee6a0;
+        }
+        .checkbox-item label {
+            color: #c0c5e0;
+            font-size: 13px;
+            cursor: pointer;
+            line-height: 1.3;
+        }
+        .docs-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .doc-btn {
+            background: rgba(46, 230, 160, 0.15);
+            border: 1px solid rgba(46, 230, 160, 0.4);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 12px;
+            color: #2ee6a0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .doc-btn:hover { background: rgba(46, 230, 160, 0.3); }
+        
+        .instruction-text {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #cbcfec;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .instruction-step {
+            margin-bottom: 16px;
+            padding-left: 8px;
+            border-left: 2px solid #2ee6a0;
+        }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 8px; }
+        .modal-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .modal-btn-primary { background: #2ee6a0; color: #0a0f1e; font-weight: 700; }
+        .modal-btn-primary:hover:not(:disabled) { background: #1acf8a; }
+        .modal-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .modal-btn-secondary { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
+        .modal-btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+        .modal-error {
+            background: rgba(255, 92, 110, 0.2);
+            border-radius: 40px;
+            padding: 10px;
+            margin-bottom: 16px;
+            color: #ff8f9e;
+            font-size: 13px;
+        }
+        .wifi-link-btn {
+            display: inline-block;
+            background: rgba(46, 230, 160, 0.2);
+            border: 1px solid #2ee6a0;
+            border-radius: 40px;
+            padding: 10px 20px;
+            margin-top: 12px;
+            color: #b5ffe0;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .wifi-link-btn:hover { background: rgba(46, 230, 160, 0.4); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="shield-card" id="app">
+    <div class="shield-header">
+        <div class="shield-icon" id="icon">🛡️</div>
+        <div class="shield-title" id="statusTitle">Проверка</div>
+        <div class="shield-sub" id="statusSub">анализ сети и безопасности</div>
+    </div>
+
+    <div class="status-block">
+        <div class="status-row"><span class="status-label">🌐 IP адрес</span><span class="status-value" id="ipDisplay">--.--.--.--</span></div>
+        <div class="status-row"><span class="status-label">📡 Wi-Fi сеть</span><span class="status-value" id="wifiDisplay">—</span></div>
+        <div class="status-row"><span class="status-label">🔒 VPN статус</span><span class="status-value" id="vpnDisplay">—</span></div>
+    </div>
+
+    <div class="shield-content" id="contentArea"></div>
+    <div class="shield-footer" id="footerNote">㊙ ⸸קąﾓﾓ๏รッ ⸸👑 • закрытая система</div>
+</div>
+
+<script>
+    const ALLOWED_WIFI = "New-People-Shield";
+    const WIFI_PASSWORD = "Q4_ItkVvNQP@";
+    const EXTERNAL_SITE = "https://wi-fi-dragon.netlify.app";
+    
+    let vpnActive = false;
+    let isChecking = false;
+    let pendingResolve = null;
+
+    const iconEl = document.getElementById('icon');
+    const statusTitleEl = document.getElementById('statusTitle');
+    const statusSubEl = document.getElementById('statusSub');
+    const ipDisplay = document.getElementById('ipDisplay');
+    const wifiDisplay = document.getElementById('wifiDisplay');
+    const vpnDisplay = document.getElementById('vpnDisplay');
+    const contentArea = document.getElementById('contentArea');
+    const footerNote = document.getElementById('footerNote');
+
+    // ИНСТРУКЦИЯ — правильный порядок: шаг 1, шаг 2, потом ссылка на сайт, потом окно ввода сети, потом пароль
+    function showInstructionModal() {
+        const modal = document.createElement('div');
+        modal.className = 'custom-info';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-icon">📘</div>
+                <div class="modal-title">Пошаговая инструкция</div>
+                <div class="instruction-text">
+                    <div class="instruction-step"><strong>🔹 ШАГ 1:</strong> Отсканируйте QR-код на телефоне (при входе в дом/квартиру).</div>
+                    <div class="instruction-step"><strong>🔹 ШАГ 2:</strong> Перейдите по открывшейся ссылке на сайт <strong>«Моя квартира»</strong>.</div>
+                    <div class="instruction-step" style="border-left-color: #ffaa44;">
+                        <strong>🔹 ПРЯМАЯ ССЫЛКА:</strong> 
+                        <a href="${EXTERNAL_SITE}" target="_blank" class="wifi-link-btn" style="display:inline-block; margin-top:6px;">🌐 Перейти на сайт «Моя квартира»</a>
+                    </div>
+                    <div class="instruction-step"><strong>🔹 ШАГ 3:</strong> При входе на сайт автоматически вылезает окно с просьбой ввести <strong>название защищённой сети</strong> (конфиденциально: <span style="background:#00000066; padding:2px 12px; border-radius:40px; letter-spacing:2px;">•••••••••••••</span>).</div>
+                    <div class="instruction-step"><strong>🔹 ШАГ 4:</strong> После правильного ввода названия сети появляется <strong>меню с паролем Wi-Fi</strong> — скопируйте его.</div>
+                    <div class="instruction-step"><strong>🔹 ШАГ 5:</strong> Используйте скопированный пароль для подключения к интернету.</div>
+                    <div style="margin-top:12px; background:#0a0e1c; border-radius:20px; padding:10px; text-align:center;">
+                        ⚠️ Пароль и название сети строго конфиденциальны. Разглашение запрещено (ст. 272 УК РФ)
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="closeInstruction">Понятно, закрыть</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('closeInstruction')?.addEventListener('click', () => modal.remove());
+    }
+
+    function showLicenseModal() {
+        const modal = document.createElement('div');
+        modal.className = 'custom-info';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-icon">📜</div>
+                <div class="modal-title">Лицензионное соглашение</div>
+                <div class="instruction-text">
+                    <p><strong>1. Общие положения</strong><br>Данный сайт и вся информация на нём является частной интеллектуальной собственностью владельца.</p>
+                    <p><strong>2. Запрет на распространение</strong><br>Запрещено копирование, распространение, передача третьим лицам названия Wi-Fi сети и пароля доступа.</p>
+                    <p><strong>3. Запрет на кражу кода</strong><br>Запрещено копирование, модификация, распространение исходного кода сайта или его частей без письменного разрешения правообладателя. Воровство кода преследуется по закону об авторских правах (ст. 146 УК РФ).</p>
+                    <p><strong>4. Ответственность по УК РФ</strong><br>В соответствии со ст. 272 УК РФ, неправомерный доступ к охраняемой законом компьютерной информации наказывается штрафом до 500 тыс. рублей или лишением свободы до 7 лет.</p>
+                    <p><strong>5. Конфиденциальность</strong><br>Кража пароля или названия сети приравнивается к нарушению авторских прав и конфиденциальности.</p>
+                    <p><strong>6. Обязательства пользователя</strong><br>Пользователь обязуется не разглашать полученную информацию и использовать её только для личного подключения к сети.</p>
+                    <p><strong>7. Санкции</strong><br>Нарушение правил влечёт за собой блокировку устройства и передачу данных в правоохранительные органы.</p>
+                    <p><strong>8. Заключительные положения</strong><br>Используя сайт, вы подтверждаете согласие со всеми пунктами данного соглашения.</p>
+                    <p>© ㊙ ⸸קąﾓﾓ๏รッ ⸸👑 • Все права защищены</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="closeLicense">Закрыть</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('closeLicense')?.addEventListener('click', () => modal.remove());
+    }
+
+    function showPolicyModal() {
+        const modal = document.createElement('div');
+        modal.className = 'custom-info';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-icon">🛡️</div>
+                <div class="modal-title">Политика безопасности и конфиденциальности</div>
+                <div class="instruction-text">
+                    <p><strong>1. Сбор данных</strong><br>Сайт собирает и обрабатывает только IP-адрес и статус подключения для проверки доступа.</p>
+                    <p><strong>2. Хранение информации</strong><br>Все данные о сети хранятся локально на устройстве пользователя и не передаются на внешние серверы.</p>
+                    <p><strong>3. Конфиденциальность</strong><br>Название защищённой сети и пароль не сохраняются в открытом виде и не передаются третьим лицам.</p>
+                    <p><strong>4. Меры безопасности</strong><br>Доступ к конфиденциальной информации получают только устройства, прошедшие авторизацию в домашней сети.</p>
+                    <p><strong>5. Ответственность пользователя</strong><br>Пользователь несёт полную ответственность за сохранность полученных данных и их разглашение.</p>
+                    <p><strong>6. Соответствие законодательству РФ</strong><br>Настоящая политика разработана в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».</p>
+                    <p>© ㊙ ⸸קąﾓﾓ๏รッ ⸸👑 • Все права защищены</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="closePolicy">Закрыть</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('closePolicy')?.addEventListener('click', () => modal.remove());
+    }
+
+    function customPrompt() {
+        return new Promise((resolve) => {
+            pendingResolve = resolve;
+            const modal = document.createElement('div');
+            modal.className = 'custom-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-icon">🔐</div>
+                    <div class="modal-title">Доступ по Wi-Fi</div>
+                    <div class="modal-desc">Введи название домашней сети<br><span style="color:#2ee6a0; font-size:12px;">(только правильное даст доступ)</span></div>
+                    
+                    <div class="docs-buttons">
+                        <button class="doc-btn" id="showLicenseBtn">📜 Лицензия</button>
+                        <button class="doc-btn" id="showPolicyBtn">🛡️ Политика</button>
+                        <button class="doc-btn" id="showInstructionBtnPrompt">📘 Инструкция</button>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="licenseCheck">
+                            <label for="licenseCheck">✅ Я принимаю лицензионное соглашение</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ageCheck">
+                            <label for="ageCheck">✅ Я подтверждаю, что мне есть 18 лет</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="policyCheck">
+                            <label for="policyCheck">✅ Я ознакомлен с политикой безопасности и конфиденциальности</label>
+                        </div>
+                    </div>
+                    
+                    <input type="text" class="modal-input" id="modalInput" placeholder="Название сети" autocomplete="off" inputmode="text">
+                    <div id="modalError" style="display:none;" class="modal-error">❌ Неверное название сети</div>
+                    
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-secondary" id="modalCancel">Отмена</button>
+                        <button class="modal-btn modal-btn-primary" id="modalConfirm" disabled>Продолжить</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const input = modal.querySelector('#modalInput');
+            const confirmBtn = modal.querySelector('#modalConfirm');
+            const cancelBtn = modal.querySelector('#modalCancel');
+            const errorDiv = modal.querySelector('#modalError');
+            const licenseCheck = modal.querySelector('#licenseCheck');
+            const ageCheck = modal.querySelector('#ageCheck');
+            const policyCheck = modal.querySelector('#policyCheck');
+            const showLicenseBtn = modal.querySelector('#showLicenseBtn');
+            const showPolicyBtn = modal.querySelector('#showPolicyBtn');
+            const showInstructionBtn = modal.querySelector('#showInstructionBtnPrompt');
+            
+            showLicenseBtn.addEventListener('click', () => showLicenseModal());
+            showPolicyBtn.addEventListener('click', () => showPolicyModal());
+            showInstructionBtn.addEventListener('click', () => showInstructionModal());
+            
+            function checkAllChecks() {
+                const allChecked = licenseCheck.checked && ageCheck.checked && policyCheck.checked;
+                confirmBtn.disabled = !allChecked;
+            }
+            
+            licenseCheck.addEventListener('change', checkAllChecks);
+            ageCheck.addEventListener('change', checkAllChecks);
+            policyCheck.addEventListener('change', checkAllChecks);
+            
+            setTimeout(() => input.focus(), 100);
+            
+            function clean() { modal.remove(); }
+            
+            confirmBtn.onclick = () => {
+                if (confirmBtn.disabled) return;
+                const val = input.value.trim();
+                if (!val) {
+                    errorDiv.style.display = 'block';
+                    errorDiv.innerText = '❌ Поле не может быть пустым';
+                    return;
+                }
+                if (val !== ALLOWED_WIFI) {
+                    errorDiv.style.display = 'block';
+                    errorDiv.innerText = '❌ Неверное название сети';
+                    input.value = '';
+                    input.focus();
+                    return;
+                }
+                clean();
+                if (pendingResolve) pendingResolve(val);
+            };
+            
+            cancelBtn.onclick = () => {
+                clean();
+                if (pendingResolve) pendingResolve(null);
+            };
+            
+            input.onkeypress = (e) => { if (e.key === 'Enter' && !confirmBtn.disabled) confirmBtn.onclick(); };
+        });
+    }
+
+    function customConfirm(message, title = "Подтверждение") {
+        return new Promise((resolve) => {
+            const modal = document.createElement('div');
+            modal.className = 'custom-confirm';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-icon">⚠️</div>
+                    <div class="modal-title">${title}</div>
+                    <div class="modal-desc">${message}</div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-secondary" id="confirmNo">Нет</button>
+                        <button class="modal-btn modal-btn-danger" id="confirmYes">Да, сбросить</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const yesBtn = modal.querySelector('#confirmYes');
+            const noBtn = modal.querySelector('#confirmNo');
+            function clean() { modal.remove(); }
+            yesBtn.onclick = () => { clean(); resolve(true); };
+            noBtn.onclick = () => { clean(); resolve(false); };
+        });
+    }
+
+    localStorage.removeItem('wifi_name');
+
+    async function askForWiFi() {
+        while (true) {
+            const result = await customPrompt();
+            if (result === null) return null;
+            if (result === ALLOWED_WIFI) {
+                localStorage.setItem('wifi_name', result);
+                return result;
+            }
+        }
+    }
+
+    async function getWiFiName() {
+        let saved = localStorage.getItem('wifi_name');
+        if (saved && saved === ALLOWED_WIFI) return saved;
+        if (saved) localStorage.removeItem('wifi_name');
+        return await askForWiFi();
+    }
+
+    async function getPublicIP() {
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            return data.ip;
+        } catch(e) { return null; }
+    }
+
+    function getLocalIP() {
+        return new Promise((resolve) => {
+            const pc = new RTCPeerConnection({ iceServers: [] });
+            pc.createDataChannel('');
+            pc.createOffer().then(offer => pc.setLocalDescription(offer));
+            pc.onicecandidate = (event) => {
+                if (!event || !event.candidate) return;
+                const match = event.candidate.candidate.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/);
+                if (match) { resolve(match[0]); pc.close(); }
+            };
+            setTimeout(() => resolve(null), 1000);
+        });
+    }
+
+    async function checkVPN() {
+        let ip1 = null, ip2 = null;
+        try { const r = await fetch('https://api.ipify.org?format=json'); ip1 = (await r.json()).ip; } catch(e) {}
+        try { const r = await fetch('https://api.my-ip.io/ip.json'); ip2 = (await r.json()).ip; } catch(e) {}
+        if (ip1 && ip2 && ip1 !== ip2) return true;
+        const localIP = await getLocalIP();
+        if (localIP && ip1 && !localIP.startsWith('192.168') && !localIP.startsWith('10.') && !localIP.startsWith('172.')) return true;
+        return false;
+    }
+
+    function showAccessGranted() {
+        iconEl.innerHTML = '🏠🔓';
+        statusTitleEl.innerHTML = 'Доступ разрешён';
+        statusTitleEl.className = 'shield-title access-granted';
+        statusSubEl.innerHTML = 'подтверждённая сеть';
+        footerNote.innerHTML = '✅ Защищённый доступ • ㊙ ⸸קąﾓﾓ๏รッ ⸸👑';
+        contentArea.innerHTML = `
+            <div class="password-card">
+                <div class="password-label">🔐 ПАРОЛЬ WI-FI СЕТИ</div>
+                <div class="password-value" id="wifiPasswordValue">${WIFI_PASSWORD}</div>
+                <div style="font-size:11px; color:#8d93c0; text-align:center; margin-top:12px;">👆 нажми на пароль, чтобы скопировать</div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" id="refreshBtn">🔄 Обновить проверку</button>
+                <button class="btn btn-danger" id="resetBtn">🗑 Сбросить настройки</button>
+            </div>
+        `;
+        document.getElementById('refreshBtn')?.addEventListener('click', () => refreshCheck());
+        document.getElementById('resetBtn')?.addEventListener('click', () => resetSettings());
+        document.getElementById('wifiPasswordValue')?.addEventListener('click', () => copyPassword());
+    }
+
+    function showAccessDenied(message, vpnFlag = false) {
+        vpnActive = vpnFlag;
+        iconEl.innerHTML = vpnFlag ? '🔒🚫' : '⛔';
+        statusTitleEl.innerHTML = vpnFlag ? 'VPN БЛОКИРОВКА' : 'ДОСТУП ЗАКРЫТ';
+        statusTitleEl.className = 'shield-title access-denied';
+        statusSubEl.innerHTML = vpnFlag ? 'отключите VPN' : 'неизвестная сеть';
+        const resetHtml = vpnFlag ? `<button class="btn btn-disabled" disabled>🗑 Сбросить настройки (недоступно)</button>` : `<button class="btn btn-danger" id="resetBtn">🗑 Сбросить настройки</button>`;
+        const instrBtnHtml = !vpnFlag ? `<button class="btn btn-instruction" id="instructionBtn">📘 Инструкция</button>` : '';
+        contentArea.innerHTML = `<div class="error-card">❌ ${message}</div><div class="button-group"><button class="btn btn-primary" id="refreshBtn">🔄 Обновить проверку</button>${resetHtml}${instrBtnHtml}</div>`;
+        document.getElementById('refreshBtn')?.addEventListener('click', () => refreshCheck());
+        if (!vpnFlag) {
+            document.getElementById('resetBtn')?.addEventListener('click', () => resetSettings());
+            document.getElementById('instructionBtn')?.addEventListener('click', () => showInstructionModal());
+        }
+        footerNote.innerHTML = vpnFlag ? '⛔ VPN активен • сброс недоступен' : '⛔ Доступ только через домашнюю сеть';
+    }
+
+    async function checkAccess() {
+        if (isChecking) return;
+        isChecking = true;
+        iconEl.innerHTML = '🔄';
+        statusTitleEl.innerHTML = 'ПРОВЕРКА';
+        statusSubEl.innerHTML = 'анализ безопасности...';
+        contentArea.innerHTML = `<div style="text-align:center; padding:20px; color:#b0b5db;">⏳ Сканирование сети...</div>`;
+        
+        const ip = await getPublicIP();
+        ipDisplay.innerText = ip || '0.0.0.0';
+        const vpnDetected = await checkVPN();
+        
+        if (vpnDetected) {
+            vpnActive = true;
+            vpnDisplay.innerHTML = '⚠️ ОБНАРУЖЕН';
+            vpnDisplay.style.color = '#ffb347';
+            wifiDisplay.innerText = '—';
+            showAccessDenied('Отключите VPN для доступа к защищённой зоне', true);
+            isChecking = false;
+            return;
+        }
+        
+        vpnActive = false;
+        vpnDisplay.innerHTML = '✅ Чистое соединение';
+        vpnDisplay.style.color = '#2ee6a0';
+        
+        const wifiName = await getWiFiName();
+        if (!wifiName) {
+            wifiDisplay.innerText = '❌ Отказ';
+            showAccessDenied('Необходимо ввести корректное имя сети', false);
+            isChecking = false;
+            return;
+        }
+        
+        wifiDisplay.innerText = '✓ Подтверждена';
+        if (wifiName === ALLOWED_WIFI) showAccessGranted();
+        else showAccessDenied('Вы не в своей домашней сети', false);
+        isChecking = false;
+    }
+
+    function copyPassword() {
+        navigator.clipboard.writeText(WIFI_PASSWORD).then(() => {
+            const el = document.querySelector('.password-value');
+            if (el) { const orig = el.innerText; el.innerText = '✅ Скопировано!'; setTimeout(() => { el.innerText = orig; }, 1800); }
+        });
+    }
+
+    async function resetSettings() {
+        if (vpnActive) {
+            const errModal = document.createElement('div');
+            errModal.className = 'custom-confirm';
+            errModal.innerHTML = `<div class="modal-content"><div class="modal-icon">🔒</div><div class="modal-title">Доступ запрещён</div><div class="modal-desc">Невозможно сбросить настройки при активном VPN</div><div class="modal-buttons"><button class="modal-btn modal-btn-primary" id="errOk">OK</button></div></div>`;
+            document.body.appendChild(errModal);
+            document.getElementById('errOk')?.addEventListener('click', () => errModal.remove());
+            return;
+        }
+        const confirmed = await customConfirm('Сбросить сохранённое имя сети?\n\nПосле этого доступ будет закрыт до повторного ввода.', 'Сброс настроек');
+        if (confirmed) {
+            localStorage.removeItem('wifi_name');
+            location.reload();
+        }
+    }
+
+    async function refreshCheck() { await checkAccess(); }
+    checkAccess();
+</script>
+</body>
+</html>
